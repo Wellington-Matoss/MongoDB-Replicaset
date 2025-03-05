@@ -1,0 +1,87 @@
+services:
+  mongo1:
+    image: mongo:7.0
+    container_name: mongo1
+    hostname: mongo1
+    restart: unless-stopped
+    ports:
+      - 27117:27117
+    env_file: ./mongod.env
+    volumes:
+      # - /var/lib/mongodb/data/mongo1:/data/db
+      # - /var/lib/mongodb/security:/etc/mongo
+      - ./mongodb/data/mongo1:/data/db # Alternativa para desenvolvimento local
+      - ./mongodb/security:/etc/mongo # Alternativa para desenvolvimento local
+    command: >
+      mongod --replSet rs0 --keyFile /etc/mongo/keyfile.key --bind_ip_all --auth --port 27117 --oplogSize 600 --setParameter tcmallocAggressiveMemoryDecommit=1
+    depends_on:
+      - mongo-keyfile
+    networks:
+      - mongo_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  mongo2:
+    image: mongo:7.0
+    container_name: mongo2
+    hostname: mongo2
+    restart: unless-stopped
+    ports:
+      - 27118:27118
+    env_file: ./mongod.env
+    volumes:
+      # - /var/lib/mongodb/data/mongo2:/data/db
+      # - /var/lib/mongodb/security:/etc/mongo
+      - ./mongodb/data/mongo2:/data/db
+      - ./mongodb/security:/etc/mongo
+    command: >
+      mongod --replSet rs0 --keyFile /etc/mongo/keyfile.key --bind_ip_all --auth --port 27118 --oplogSize 600 --setParameter tcmallocAggressiveMemoryDecommit=1
+    depends_on:
+      - mongo-keyfile
+    networks:
+      - mongo_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  mongo3:
+    image: mongo:7.0
+    container_name: mongo3
+    hostname: mongo3
+    restart: unless-stopped
+    ports:
+      - 27119:27119
+    env_file: ./mongod.env
+    volumes:
+      # - /var/lib/mongodb/data/mongo3:/data/db
+      # - /var/lib/mongodb/security:/etc/mongo
+      - ./mongodb/data/mongo3:/data/db
+      - ./mongodb/security:/etc/mongo
+    command: >
+      mongod --replSet rs0 --keyFile /etc/mongo/keyfile.key --bind_ip_all --auth --port 27119 --oplogSize 600
+    depends_on:
+      - mongo-keyfile
+    networks:
+      - mongo_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  mongo-keyfile:
+    image: alpine
+    container_name: mongo-keyfile
+    volumes:
+      # - /var/lib/mongodb/security:/mongo-conf
+      - ./mongodb/security:/mongo-conf
+    command: 'sh -c "apk add --no-cache openssl && openssl rand -base64 756 > /mongo-conf/keyfile.key && chmod 600 /mongo-conf/keyfile.key && chown 999 /mongo-conf/keyfile.key"'
+
+networks:
+  mongo_network:
+    driver: bridge
