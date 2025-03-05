@@ -3,7 +3,7 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-7.0-green)
 ![Docker](https://img.shields.io/badge/Docker-Compatible-blue)
 
-Uma configuração pronta para uso de um cluster MongoDB com replicação (Replica Set) utilizando Docker Compose. Este projeto configura um ambiente MongoDB com três nós em replica set para alta disponibilidade e resiliência de dados.
+Este projeto configura um ambiente MongoDB com três nós em replica set para alta disponibilidade e resiliência de dados.
 
 ## 📋 Requisitos
 
@@ -40,7 +40,7 @@ O cluster MongoDB é composto por:
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/mongodb-replicaset.git
+   git clone https://github.com/Wellington-Matoss/mongodb-replicaset.git
    cd mongodb-replicaset
    ```
 
